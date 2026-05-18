@@ -27,8 +27,8 @@ public class UI extends Thread {
     private static JTextField text = new JTextField();
     
     public void run() {
-
-
+        frame.setLayout(layout);
+        
     }
 
     public void restart() {
