@@ -1,104 +1,204 @@
 package src.Handlers;
 
-import javax.swing.JFrame;
+import src.UIObjects.*;
+import src.Constants.UIConstants;
+import src.Handlers.ControllerHandler.LEDStatus;
+import src.Threads.Controller;
+import src.Main;
+import src.UIObjects;
+
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
 
 public class UIHandler {
-    private static final Container container = new Container();
+    private static JFrame frame = new JFrame("LED-UI");
 
-    // TODO: Implement
-    // private static final ActionEvent actionEvent = new ActionEvent(container, 0, null);
-    // };
-    // private static final ActionListener actionListener = new ActionListener() {
-        
-    // };
+    private static TextObjects header = new TextObjects(
+        "LED-Selector!", 
+        new Rectangle(250,40,230,60), 
+        new Color(255,255,255), 
+        new Color(255,0,0),
+        new Font("Arial", Font.BOLD, 32), 
+        new Insets(10,10,10,10)
+    );
 
-    private static JFrame frame = new JFrame();
+    private static TextObjects rText = new TextObjects(
+        "Red Value:", 
+        new Rectangle(80,120,150,50), 
+        new Color(255,255,255), 
+        new Color(255,0,0),
+        new Font("Arial", Font.BOLD, 24), 
+        new Insets(10,10,10,10)
+    );
 
-    private static JLabel header = new JLabel();
+    private static TextObjects gText = new TextObjects(
+        "Green Value:", 
+        new Rectangle(70,300,180,50), 
+        new Color(255,255,255), 
+        new Color(0,255,0),
+        new Font("Arial", Font.BOLD, 24), 
+        new Insets(10,10,10,10)
+    );
+    private static TextObjects bText = new TextObjects(
+        "Blue Value:", 
+        new Rectangle(75,480,160,50), 
+        new Color(255,255,255), 
+        new Color(0,0,255),
+        new Font("Arial", Font.BOLD, 24), 
+        new Insets(10,10,10,10)
+    );
 
-    private static JLabel r1Label = new JLabel();
-    private static JLabel g1Label = new JLabel();
-    private static JLabel b1Label = new JLabel();
+    private static InputObjects rInput = new InputObjects(
+        "", 
+        new Rectangle(75,200,160,50), 
+        new Color(255,255,255), 
+        new Color(0,0,255),
+        new Font("Arial", Font.BOLD, 24), 
+        new Insets(10,10,10,10)
+    );
 
-    private static JLabel r2Label = new JLabel();
-    private static JLabel g2Label = new JLabel();
-    private static JLabel b2Label = new JLabel();
+    private static InputObjects gInput = new InputObjects(
+        "", 
+        new Rectangle(75,380,160,50), 
+        new Color(255,255,255), 
+        new Color(0,0,255),
+        new Font("Arial", Font.BOLD, 24), 
+        new Insets(10,10,10,10)
+    );
+    
+    private static InputObjects bInput = new InputObjects(
+        "", 
+        new Rectangle(75,560,160,50), 
+        new Color(255,255,255), 
+        new Color(0,0,255),
+        new Font("Arial", Font.BOLD, 24), 
+        new Insets(10,10,10,10)
+    );
+    
 
-    private static JLabel r3Label = new JLabel();
-    private static JLabel g3Label = new JLabel();
-    private static JLabel b3Label = new JLabel();
+    private static ButtonObjects setRGBBtn = new ButtonObjects(
+        "Update >:3c", 
+        new Rectangle(60,640,200,50), 
+        new Color(255,255,255), 
+        new Color(0,0,0),
+        new Font("Arial", Font.BOLD, 24), 
+        new Insets(10,10,10,10)
+    );
 
-    private static JTextField r1Input = new JTextField();
-    private static JTextField g1Input = new JTextField();
-    private static JTextField b1Input = new JTextField();
+    private static ButtonObjects profileOneBtn = new ButtonObjects(
+        "Uniform LEDS", 
+        new Rectangle(350,160,300,50), 
+        new Color(255,255,255), 
+        new Color(0,0,0),
+        new Font("Arial", Font.BOLD, 24), 
+        new Insets(10,10,10,10)
+    );
 
-    private static JTextField r2Input = new JTextField();
-    private static JTextField g2Input = new JTextField();
-    private static JTextField b2Input = new JTextField();
+    private static ButtonObjects profileTwoBtn = new ButtonObjects(
+        "Alternating LEDS", 
+        new Rectangle(350,340,300,50), 
+        new Color(255,255,255), 
+        new Color(0,0,0),
+        new Font("Arial", Font.BOLD, 24), 
+        new Insets(10,10,10,10)
+    );
 
-    private static JTextField r3Input = new JTextField();
-    private static JTextField g3Input = new JTextField();
-    private static JTextField b3Input = new JTextField();
+    private static ButtonObjects profileThreeBtn = new ButtonObjects(
+        "Tri-Alternating LEDS", 
+        new Rectangle(350,520,300,50), 
+        new Color(255,255,255), 
+        new Color(0,0,0),
+        new Font("Arial", Font.BOLD, 24), 
+        new Insets(10,10,10,10)
+    );
 
-    private static JButton profileOneBtn = new JButton();
-    private static JButton profileTwoBtn = new JButton();
-    private static JButton profileThreeBtn = new JButton();
+    private static ButtonObjects stopBtn = new ButtonObjects(
+        "STOP", 
+        new Rectangle(350,600,300,50), 
+        new Color(255,255,255), 
+        new Color(255,0,0),
+        new Font("Arial", Font.BOLD, 24), 
+        new Insets(10,10,10,10)
+    );
 
-    static {
-        // TODO: ADD CODE TO CONFIGURE BUTTONS/ POSITIONING
+    public static void init() {
+        frame= TextObjects.appendAllText(frame);
+        frame= InputObjects.appendAllText(frame);
+        frame= ButtonObjects.appendAllText(frame);
 
-        addLabelsToFrame();
-        addInputsToFrame();
-        addButtonsToFrame();
-
+        configureEvents();
         configureFrame();
+        frame.setVisible(true);
     }
 
-    private static void addLabelsToFrame() {
-        frame.add(header);
+    private static void configureEvents() {
+        setRGBBtn.buttonObject.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                if(
+                    hasOnlyNums(rInput.inputObject.getText())
+                    && hasOnlyNums(bInput.inputObject.getText())
+                    && hasOnlyNums(gInput.inputObject.getText())
+                ) {
+                    Controller.ledStatus=LEDStatus.custom;
+                }
+            }
+        });
 
-        frame.add(r1Label);
-        frame.add(b1Label);
-        frame.add(g1Label);
+        profileOneBtn.buttonObject.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                Controller.ledStatus=LEDStatus.profileOne;
+            }
+        });
 
-        frame.add(r2Label);
-        frame.add(b2Label);
-        frame.add(g2Label);
+        profileTwoBtn.buttonObject.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                Controller.ledStatus=LEDStatus.profileTwo;
+            }
+        });
 
-        frame.add(r3Label);
-        frame.add(b3Label);
-        frame.add(g3Label);
-    }
+        profileThreeBtn.buttonObject.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                Controller.ledStatus=LEDStatus.profileThree;
+            }
+        });
 
-    private static void addInputsToFrame() {
-        frame.add(r1Input);
-        frame.add(b1Input);
-        frame.add(g1Input);
-
-        frame.add(r2Input);
-        frame.add(b2Input);
-        frame.add(g2Input);
-
-        frame.add(r3Input);
-        frame.add(b3Input);
-        frame.add(g3Input);
-    }
-
-    private static void addButtonsToFrame() {
-        frame.add(profileOneBtn);
-        frame.add(profileTwoBtn);
-        frame.add(profileThreeBtn);
+        stopBtn.buttonObject.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                Controller.ledStatus=LEDStatus.none;
+            }
+        });
     }
 
     private static void configureFrame() {
-        frame.setLayout(GUIConstants.kFrameLayout);
-        frame.setSize(GUIConstants.kFrameDimension);
-        frame.setVisible(true);
+        frame.setLayout(UIConstants.kFrameLayout);
+
+        frame.setSize(UIConstants.kFrameDimension);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocation(750, 200);
+        frame.setResizable(false);
 
     }
-    // TODO: DECIDE ON IMPLEMENTATION
-    // public static void turnOnScreen() {
-    //     frame.setVisible(true);
 
-    // }
+    private static boolean hasOnlyNums(String str) {
+        try {
+            Integer.valueOf(str);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }

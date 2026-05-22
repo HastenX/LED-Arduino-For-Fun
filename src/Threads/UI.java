@@ -1,6 +1,7 @@
 package src.Threads;
 
-import src.Constants.GUIConstants;
+import src.Constants.UIConstants;
+import src.Handlers.UIHandler;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -14,17 +15,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 public class UI extends Thread {
-
+    public static boolean isRunning=false;
     
+    @Override
     public void run() {
-
+        isRunning=true;
+        UIHandler.init();
         
-    }
-
-    public void restart() {
-        this.interrupt();
-        this.start();
-
     }
 
 }
