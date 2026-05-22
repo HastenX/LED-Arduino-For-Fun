@@ -1,12 +1,5 @@
 package src.Handlers;
 
-import src.UIObjects.*;
-import src.Constants.UIConstants;
-import src.Handlers.ControllerHandler.LEDStatus;
-import src.Threads.Controller;
-import src.Main;
-import src.UIObjects;
-
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
@@ -18,6 +11,13 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
+
+import src.Main;
+import src.UIObjects;
+import src.Constants.UIConstants;
+import src.Handlers.ControllerHandler.LEDStatus;
+import src.Threads.Controller;
+import src.UIObjects.*;
 
 public class UIHandler {
     private static JFrame frame = new JFrame("LED-UI");
@@ -145,9 +145,9 @@ public class UIHandler {
             @Override
             public void actionPerformed(ActionEvent event) {
                 if(
-                    hasOnlyNums(rInput.inputObject.getText())
-                    && hasOnlyNums(bInput.inputObject.getText())
-                    && hasOnlyNums(gInput.inputObject.getText())
+                    isValidNum(rInput.inputObject.getText())
+                        && isValidNum(bInput.inputObject.getText())
+                        && isValidNum(gInput.inputObject.getText())
                 ) {
                     Controller.ledStatus=LEDStatus.custom;
                 }
@@ -193,9 +193,11 @@ public class UIHandler {
 
     }
 
-    private static boolean hasOnlyNums(String str) {
+    private static boolean isValidNum(String str) {
         try {
-            Integer.valueOf(str);
+            if(Integer.valueOf(str) > 255) {
+                throw new Exception();
+            }
         } catch (Exception e) {
             return false;
         }
