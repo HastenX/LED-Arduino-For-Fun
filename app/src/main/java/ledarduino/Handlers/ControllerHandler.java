@@ -2,24 +2,20 @@ package ledarduino.Handlers;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortDataListener;
-import com.fazecast.jSerialComm.SerialPortEvent;
 
-import ledarduino.Handlers.ControllerHandler.LEDStatus;
+import ledarduino.Constants.ControllerConstants;
 
 public class ControllerHandler {
-    private static SerialPort serialPort = SerialPort.getCommPort("/dev/ttyACM0");
+    private static SerialPort serialPort = SerialPort.getCommPort(ControllerConstants.kPortDescriptor);
 
     static {
-        serialPort.setComPortParameters(57600,8,1,0);
+        serialPort.setComPortParameters(ControllerConstants.kBaudRate,ControllerConstants.kNewDataBits,ControllerConstants.kNewStopBits,0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
     }
 
     private static ArrayList<Integer> signals;
-    private static boolean hasFirstConnection=true;
     private static byte[] readBuffer = new byte[1024];
 
     public static void run(LEDStatus ledStatus) {
@@ -37,7 +33,6 @@ public class ControllerHandler {
 
             for(Integer i : signals) {
                 serialPort.getOutputStream().write(i.byteValue());
-                System.out.println(i);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -61,10 +56,10 @@ public class ControllerHandler {
 
 
     public enum LEDStatus {
-        none(0, new Color(0,0,0)),
-        custom(0, new Color(0,0,0)),
-        profileOne(1, new Color(255,0,0)),
-        profileTwo(2, new Color(255,0,0));
+        none(0, ControllerConstants.kColorFiller),
+        custom(0,ControllerConstants.kColorFiller),
+        profileOne(1, ControllerConstants.kColorFiller),
+        profileTwo(2, ControllerConstants.kColorFiller);
 
         private Color color;
         public final int index;

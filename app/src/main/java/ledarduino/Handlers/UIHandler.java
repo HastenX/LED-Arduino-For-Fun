@@ -1,19 +1,14 @@
 package ledarduino.Handlers;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
 
-import ledarduino.Main;
-import ledarduino.UIObjects;
 import ledarduino.Constants.UIConstants;
 import ledarduino.Handlers.ControllerHandler.LEDStatus;
 import ledarduino.Threads.Controller;
@@ -25,109 +20,100 @@ public class UIHandler {
     private static TextObjects header = new TextObjects(
         "LED-Selector!", 
         new Rectangle(250,40,230,60), 
-        new Color(255,255,255), 
+        UIConstants.kWhiteFiller, 
         new Color(255,0,0),
-        new Font("Arial", Font.BOLD, 32), 
-        new Insets(10,10,10,10)
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
     );
 
     private static TextObjects rText = new TextObjects(
         "Red Value:", 
         new Rectangle(80,120,150,50), 
-        new Color(255,255,255), 
+        UIConstants.kWhiteFiller, 
         new Color(255,0,0),
-        new Font("Arial", Font.BOLD, 24), 
-        new Insets(10,10,10,10)
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
     );
 
     private static TextObjects gText = new TextObjects(
         "Green Value:", 
         new Rectangle(70,300,180,50), 
-        new Color(255,255,255), 
+        UIConstants.kWhiteFiller, 
         new Color(0,255,0),
-        new Font("Arial", Font.BOLD, 24), 
-        new Insets(10,10,10,10)
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
     );
     private static TextObjects bText = new TextObjects(
         "Blue Value:", 
         new Rectangle(75,480,160,50), 
-        new Color(255,255,255), 
+        UIConstants.kWhiteFiller, 
         new Color(0,0,255),
-        new Font("Arial", Font.BOLD, 24), 
-        new Insets(10,10,10,10)
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
     );
 
     private static InputObjects rInput = new InputObjects(
         "", 
         new Rectangle(75,200,160,50), 
-        new Color(255,255,255), 
+        UIConstants.kWhiteFiller, 
         new Color(0,0,255),
-        new Font("Arial", Font.BOLD, 24), 
-        new Insets(10,10,10,10)
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
     );
 
     private static InputObjects gInput = new InputObjects(
         "", 
         new Rectangle(75,380,160,50), 
-        new Color(255,255,255), 
+        UIConstants.kWhiteFiller, 
         new Color(0,0,255),
-        new Font("Arial", Font.BOLD, 24), 
-        new Insets(10,10,10,10)
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
     );
     
     private static InputObjects bInput = new InputObjects(
         "", 
         new Rectangle(75,560,160,50), 
-        new Color(255,255,255), 
+        UIConstants.kWhiteFiller, 
         new Color(0,0,255),
-        new Font("Arial", Font.BOLD, 24), 
-        new Insets(10,10,10,10)
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
     );
     
 
     private static ButtonObjects setRGBBtn = new ButtonObjects(
         "Update >:3c", 
         new Rectangle(60,640,200,50), 
-        new Color(255,255,255), 
+        UIConstants.kWhiteFiller, 
         new Color(0,0,0),
-        new Font("Arial", Font.BOLD, 24), 
-        new Insets(10,10,10,10)
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
     );
 
     private static ButtonObjects profileOneBtn = new ButtonObjects(
         "Uniform LEDS", 
         new Rectangle(350,160,300,50), 
-        new Color(255,255,255), 
+        UIConstants.kWhiteFiller, 
         new Color(0,0,0),
-        new Font("Arial", Font.BOLD, 24), 
-        new Insets(10,10,10,10)
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
     );
 
     private static ButtonObjects profileTwoBtn = new ButtonObjects(
         "Alternating LEDS", 
         new Rectangle(350,340,300,50), 
-        new Color(255,255,255), 
+        UIConstants.kWhiteFiller, 
         new Color(0,0,0),
-        new Font("Arial", Font.BOLD, 24), 
-        new Insets(10,10,10,10)
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
     );
-
-    // private static ButtonObjects profileThreeBtn = new ButtonObjects(
-    //     "Tri-Alternating LEDS", 
-    //     new Rectangle(350,520,300,50), 
-    //     new Color(255,255,255), 
-    //     new Color(0,0,0),
-    //     new Font("Arial", Font.BOLD, 24), 
-    //     new Insets(10,10,10,10)
-    // );
 
     private static ButtonObjects stopBtn = new ButtonObjects(
         "STOP", 
         new Rectangle(350,600,300,50), 
-        new Color(255,255,255), 
+        UIConstants.kWhiteFiller, 
         new Color(255,0,0),
-        new Font("Arial", Font.BOLD, 24), 
-        new Insets(10,10,10,10)
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
     );
 
     public static void init() {
@@ -174,13 +160,6 @@ public class UIHandler {
                 Controller.ledStatus=LEDStatus.profileTwo;
             }
         });
-
-        // profileThreeBtn.buttonObject.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent event) {
-        //         Controller.ledStatus=LEDStatus.profileThree;
-        //     }
-        // });
 
         stopBtn.buttonObject.addActionListener(new ActionListener() {
             @Override
