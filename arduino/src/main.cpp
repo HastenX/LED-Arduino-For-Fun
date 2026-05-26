@@ -1,6 +1,10 @@
 #include <Arduino.h>
 
 // put function declarations here:
+
+void updateSignals();
+void updateSignalsIfModulo(int,int);
+
 void setRGB(int, int, int, int);
 
 void initLEDS(int,int,int);
@@ -44,33 +48,35 @@ int signals[4]={0,0,0,0};
 // index, red, green and blue
 // therefore:
 // [0] index, [1] red, [2] green, [3] blue
-// The first itteration is skipped to avoid
-// overloading.
 
-int signalNum=0;
-// int skip=2;
 void loop() {
-  if(signalNum==0) {
-    Serial.println(1);
-    Serial.flush();
-  }
-  if(Serial.available()>0 && signalNum<4) {
-    signals[signalNum]=Serial.read();
-  
-    signalNum++;
-  }
+  updateSignals();
+  selectProfile();
+}
 
-  if(signalNum>=4) {
-    signalNum=0;
-    selectProfile();
-    delay(25);
+void updateSignals() {
+  Serial.println(1);
+  Serial.flush();
+  int signalNum=0;
+  while(signalNum<4) {
+    if(Serial.available()>0) {
+      signals[signalNum]=Serial.read();
+      signalNum++;
+    } 
+  }
+  delay(25);
+}
+
+void updateSignalsIfModulo(int base, int mod) {
+  if(base % mod == 0) {
+    updateSignals();
   }
 }
 
 void setRGB(int index, int red, int green, int blue) {
-  analogWrite(redPins[index],red/128);
-  analogWrite(greenPins[index],green/128);
-  analogWrite(bluePins[index],blue/128);
+  analogWrite(redPins[index],red/32);
+  analogWrite(greenPins[index],green/32);
+  analogWrite(bluePins[index],blue/32);
 }
 
 void setAllRGB(int red,int green, int blue) {
@@ -182,13 +188,16 @@ void alternateProfile() {
   }
 }
 
-int delayVal=15;
+int delayVal=0;
+int signalDelay=0;
 int incrimentVal=1;
 void stageOneUni() {
   r=255;
   g=0;
   b=0;
   while(g<255) {
+    updateSignalsIfModulo(g,signalDelay);
+
     g+=incrimentVal;
     setAllRGB(r,g,b);
     delay(delayVal);
@@ -200,6 +209,8 @@ void stageTwoUni() {
   g=255;
   b=0;
   while(r>0) {
+    updateSignalsIfModulo(r,signalDelay);
+
     r-=incrimentVal;
     setAllRGB(r,g,b);
     delay(delayVal);
@@ -211,6 +222,8 @@ void stageThreeUni() {
   g=255;
   b=0;
   while(b<255) {
+    updateSignalsIfModulo(b,signalDelay);
+
     b+=incrimentVal;
     setAllRGB(r,g,b);
     delay(delayVal);
@@ -222,6 +235,8 @@ void stageFourUni() {
   g=255;
   b=255;
   while(g>0) {
+    updateSignalsIfModulo(g,signalDelay);
+
     g-=incrimentVal;
     setAllRGB(r,g,b);
     delay(delayVal);
@@ -233,6 +248,8 @@ void stageFiveUni() {
   g=0;
   b=255;
   while(r<255) {
+    updateSignalsIfModulo(r,signalDelay);
+
     r+=incrimentVal;
     setAllRGB(r,g,b);
     delay(delayVal);
@@ -244,6 +261,8 @@ void stageSixUni() {
   g=0;
   b=255;
   while(b>0) {
+    updateSignalsIfModulo(b,signalDelay);
+
     b-=incrimentVal;
     setAllRGB(r,g,b);
     delay(delayVal);
@@ -266,6 +285,8 @@ void stageOneAlt() {
   g1=255;
   b1=255;
   while(g0<252 || g1>3) {
+    updateSignalsIfModulo(g0,signalDelay);
+
     if(g0<252) {
       g0+=incrimentVal;
     }
@@ -286,6 +307,8 @@ void stageTwoAlt() {
   g1=0;
   b1=255;
   while(r1<252 || r0>3) {
+    updateSignalsIfModulo(r1,signalDelay);
+
     if(r1<252) {
       r1+=incrimentVal;
     }
@@ -306,6 +329,8 @@ void stageThreeAlt() {
   g1=0;
   b1=255;
   while(b0<252 || b1>3) {
+    updateSignalsIfModulo(b0,signalDelay);
+
     if(b0<252) {
       b0+=incrimentVal;
     }
@@ -326,6 +351,8 @@ void stageFourAlt() {
   g1=0;
   b1=0;
   while(g1<252 || g0>3) {
+    updateSignalsIfModulo(g1,signalDelay);
+
     if(g1<252) {
       g1+=incrimentVal;
     }
@@ -346,6 +373,8 @@ void stageFiveAlt() {
   g1=255;
   b1=0;
   while(r0<252 || r1>3) {
+    updateSignalsIfModulo(r0,signalDelay);
+
     if(r0<252) {
       r0+=incrimentVal;
     }
@@ -366,6 +395,8 @@ void stageSixAlt() {
   g1=255;
   b1=0;
   while(b1<252 || b0>3) {
+    updateSignalsIfModulo(b1,signalDelay);
+
     if(b1<252) {
       b1+=3;
     }
