@@ -1,12 +1,12 @@
-package src.Threads;
+package ledarduino.Threads;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import src.Constants.UIConstants;
-import src.Handlers.UIHandler;
+import ledarduino.Constants.UIConstants;
+import ledarduino.Handlers.UIHandler;
 
 import java.awt.FlowLayout;
 import java.awt.Container;

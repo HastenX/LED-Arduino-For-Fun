@@ -1,4 +1,4 @@
-package src.Handlers;
+package ledarduino.Handlers;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 
-import src.Main;
-import src.UIObjects;
-import src.Constants.UIConstants;
-import src.Handlers.ControllerHandler.LEDStatus;
-import src.Threads.Controller;
-import src.UIObjects.*;
+import ledarduino.Main;
+import ledarduino.UIObjects;
+import ledarduino.Constants.UIConstants;
+import ledarduino.Handlers.ControllerHandler.LEDStatus;
+import ledarduino.Threads.Controller;
+import ledarduino.UIObjects.*;
 
 public class UIHandler {
     private static JFrame frame = new JFrame("LED-UI");
@@ -112,14 +112,14 @@ public class UIHandler {
         new Insets(10,10,10,10)
     );
 
-    private static ButtonObjects profileThreeBtn = new ButtonObjects(
-        "Tri-Alternating LEDS", 
-        new Rectangle(350,520,300,50), 
-        new Color(255,255,255), 
-        new Color(0,0,0),
-        new Font("Arial", Font.BOLD, 24), 
-        new Insets(10,10,10,10)
-    );
+    // private static ButtonObjects profileThreeBtn = new ButtonObjects(
+    //     "Tri-Alternating LEDS", 
+    //     new Rectangle(350,520,300,50), 
+    //     new Color(255,255,255), 
+    //     new Color(0,0,0),
+    //     new Font("Arial", Font.BOLD, 24), 
+    //     new Insets(10,10,10,10)
+    // );
 
     private static ButtonObjects stopBtn = new ButtonObjects(
         "STOP", 
@@ -150,6 +150,13 @@ public class UIHandler {
                         && isValidNum(gInput.inputObject.getText())
                 ) {
                     Controller.ledStatus=LEDStatus.custom;
+                    LEDStatus.custom.setColor(new Color(
+                        Integer.valueOf(rInput.inputObject.getText()),
+                        Integer.valueOf(gInput.inputObject.getText()),
+                        Integer.valueOf(bInput.inputObject.getText())
+                    ));
+
+                    setRGBBtn.buttonObject.setForeground(LEDStatus.custom.getColor());
                 }
             }
         });
@@ -168,12 +175,12 @@ public class UIHandler {
             }
         });
 
-        profileThreeBtn.buttonObject.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                Controller.ledStatus=LEDStatus.profileThree;
-            }
-        });
+        // profileThreeBtn.buttonObject.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent event) {
+        //         Controller.ledStatus=LEDStatus.profileThree;
+        //     }
+        // });
 
         stopBtn.buttonObject.addActionListener(new ActionListener() {
             @Override
@@ -195,7 +202,7 @@ public class UIHandler {
 
     private static boolean isValidNum(String str) {
         try {
-            if(Integer.valueOf(str) > 255) {
+            if(Integer.valueOf(str) > 255 || str.contains(",") || str.contains(".")) {
                 throw new Exception();
             }
         } catch (Exception e) {

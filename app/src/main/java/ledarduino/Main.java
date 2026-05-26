@@ -1,7 +1,7 @@
-package src;
+package ledarduino;
 
-import src.Threads.Controller;
-import src.Threads.UI;
+import ledarduino.Threads.Controller;
+import ledarduino.Threads.UI;
 
 public class Main {
     public static final UI ui = new UI();

@@ -1,4 +1,4 @@
-package src;
+package ledarduino;
 
 import java.awt.Color;
 import java.awt.Font;
