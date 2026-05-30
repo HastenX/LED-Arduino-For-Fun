@@ -5,6 +5,7 @@
 void updateSignals();
 void updateSignalsIfModulo(int,int);
 
+bool isIndexBad(int);
 void setRGB(int, int, int, int);
 
 void initLEDS(int,int,int);
@@ -43,13 +44,27 @@ void setup() {
   initLEDS(255,81,0);
 }
 
-int signals[4]={0,0,0,0};
+int signals[5]={0,0,0,0,0};
 // Values are passed in following order: 
-// index, red, green and blue
+// index, offIndexes, red, green and blue
 // therefore:
-// [0] index, [1] red, [2] green, [3] blue
+// [0] index, [1] offIndexes, [2] red, [3] green, [4] blue
+
+// Specifically, the following integer values correspond to each posibility: (where 1 is off and 0 is on)
+
+// 0: 000
+// 1: 100
+// 2: 010
+// 3: 001
+// 4: 110
+// 5: 101
+// 6: 011
+// 7: 111
 
 void loop() {
+  // RED LED
+  // analogWrite(7,HIGH);
+  // Green LED
   updateSignals();
   selectProfile();
 }
@@ -58,13 +73,13 @@ void updateSignals() {
   Serial.println(1);
   Serial.flush();
   int signalNum=0;
-  while(signalNum<4) {
+  while(signalNum<5) {
     if(Serial.available()>0) {
       signals[signalNum]=Serial.read();
       signalNum++;
     } 
   }
-  delay(25);
+  delay(35);
 }
 
 void updateSignalsIfModulo(int base, int mod) {
@@ -73,10 +88,34 @@ void updateSignalsIfModulo(int base, int mod) {
   }
 }
 
+bool isIndexBad(int index) {
+  switch(index) {
+    case 0:
+      return false;
+    case 1:
+      return !index==0;
+    case 2:
+      return !index==1;
+    case 3:
+      return !index==2;
+    case 4:
+      return !index==0 || !index==1;
+    case 5:
+      return !index==0 || !index==2;
+    case 6:
+      return !index==1 || !index==2;
+    case 7:
+      return true;
+  }
+}
+
 void setRGB(int index, int red, int green, int blue) {
-  analogWrite(redPins[index],red/32);
-  analogWrite(greenPins[index],green/32);
-  analogWrite(bluePins[index],blue/32);
+  if(isIndexBad(index)) {
+    return;
+  }
+  analogWrite(redPins[index],red);
+  analogWrite(greenPins[index],green);
+  analogWrite(bluePins[index],blue);
 }
 
 void setAllRGB(int red,int green, int blue) {
@@ -122,7 +161,7 @@ void selectProfile() {
 
 void customProfile() {
   for(int i=0; i<2; i++) {
-    setRGB(i, signals[1], signals[2], signals[3]);
+    setRGB(i, signals[2], signals[3], signals[4]);
   }
 }
 
@@ -188,15 +227,15 @@ void alternateProfile() {
   }
 }
 
-int delayVal=0;
-int signalDelay=0;
+int delayVal=5;
+int signalDelay=1;
 int incrimentVal=1;
 void stageOneUni() {
   r=255;
   g=0;
   b=0;
   while(g<255) {
-    updateSignalsIfModulo(g,signalDelay);
+    // updateSignalsIfModulo(g,signalDelay);
 
     g+=incrimentVal;
     setAllRGB(r,g,b);

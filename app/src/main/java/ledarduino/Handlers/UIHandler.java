@@ -22,7 +22,7 @@ public class UIHandler {
         new Rectangle(250,40,230,60), 
         UIConstants.kWhiteFiller, 
         new Color(255,0,0),
-        UIConstants.kDefaultFont, 
+        UIConstants.kLargeFont, 
         UIConstants.kDefaultMargins
     );
 
@@ -48,6 +48,33 @@ public class UIHandler {
         new Rectangle(75,480,160,50), 
         UIConstants.kWhiteFiller, 
         new Color(0,0,255),
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
+    );
+
+    private static TextObjects indexText = new TextObjects(
+        "Index:", 
+        new Rectangle(440,350,100,50), 
+        UIConstants.kWhiteFiller, 
+        new Color(255,0,0),
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
+    );
+
+    private static TextObjects onCurrentText = new TextObjects(
+        "On: 0, 1, 2", 
+        new Rectangle(20,10,200,50), 
+        UIConstants.kWhiteFiller, 
+        new Color(255,0,0),
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
+    );
+
+    private static TextObjects stopCurrentText = new TextObjects(
+        "Off: ", 
+        new Rectangle(20,60,200,50), 
+        UIConstants.kWhiteFiller, 
+        new Color(255,0,0),
         UIConstants.kDefaultFont, 
         UIConstants.kDefaultMargins
     );
@@ -78,7 +105,33 @@ public class UIHandler {
         UIConstants.kDefaultFont, 
         UIConstants.kDefaultMargins
     );
-    
+
+    private static InputObjects indexInput = new InputObjects(
+        "", 
+        new Rectangle(440,410,100,50), 
+        UIConstants.kWhiteFiller, 
+        new Color(0,0,0),
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
+    );
+
+    private static ButtonObjects startIndexBtn = new ButtonObjects(
+        "Start Index", 
+        new Rectangle(350,470,300,50), 
+        UIConstants.kWhiteFiller, 
+        new Color(0,255,0),
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
+    );
+
+    private static ButtonObjects stopIndexBtn = new ButtonObjects(
+        "Stop Index", 
+        new Rectangle(350,570,300,50), 
+        UIConstants.kWhiteFiller, 
+        new Color(255,0,0),
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
+    );
 
     private static ButtonObjects setRGBBtn = new ButtonObjects(
         "Update >:3c", 
@@ -88,6 +141,7 @@ public class UIHandler {
         UIConstants.kDefaultFont, 
         UIConstants.kDefaultMargins
     );
+
 
     private static ButtonObjects profileOneBtn = new ButtonObjects(
         "Uniform LEDS", 
@@ -100,18 +154,27 @@ public class UIHandler {
 
     private static ButtonObjects profileTwoBtn = new ButtonObjects(
         "Alternating LEDS", 
-        new Rectangle(350,340,300,50), 
+        new Rectangle(350,280,300,50), 
         UIConstants.kWhiteFiller, 
         new Color(0,0,0),
         UIConstants.kDefaultFont, 
         UIConstants.kDefaultMargins
     );
 
-    private static ButtonObjects stopBtn = new ButtonObjects(
-        "STOP", 
-        new Rectangle(350,600,300,50), 
+    private static ButtonObjects stopAllBtn = new ButtonObjects(
+        "STOP ALL", 
+        new Rectangle(350,620,300,50), 
         UIConstants.kWhiteFiller, 
         new Color(255,0,0),
+        UIConstants.kDefaultFont, 
+        UIConstants.kDefaultMargins
+    );
+
+    private static ButtonObjects startAllBtn = new ButtonObjects(
+        "START ALL", 
+        new Rectangle(350,520,300,50), 
+        UIConstants.kWhiteFiller, 
+        new Color(0,255,0),
         UIConstants.kDefaultFont, 
         UIConstants.kDefaultMargins
     );
@@ -161,10 +224,55 @@ public class UIHandler {
             }
         });
 
-        stopBtn.buttonObject.addActionListener(new ActionListener() {
+        stopIndexBtn.buttonObject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                Controller.ledStatus=LEDStatus.none;
+                String currentIndex=indexInput.inputObject.getText();
+                if(isValidNum(currentIndex) 
+                    && Integer.valueOf(currentIndex)<=2
+                    && Integer.valueOf(currentIndex)>=0
+                ) {
+                    Controller.ledStatus.setStopIndex(Integer.valueOf(currentIndex),1);
+                    stopCurrentText.textObject.setText(Controller.ledStatus.getOffString());
+                    onCurrentText.textObject.setText(Controller.ledStatus.getOnString());
+                }
+            }
+        });
+
+        startIndexBtn.buttonObject.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+               String currentIndex=indexInput.inputObject.getText();
+                if(isValidNum(currentIndex)
+                    && Integer.valueOf(currentIndex)<=2
+                    && Integer.valueOf(currentIndex)>=0
+                ) {
+                    Controller.ledStatus.setStopIndex(Integer.valueOf(currentIndex),0);
+                    stopCurrentText.textObject.setText(Controller.ledStatus.getOffString());
+                    onCurrentText.textObject.setText(Controller.ledStatus.getOnString());
+                }
+            }
+        });
+
+        stopAllBtn.buttonObject.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                Controller.ledStatus.setStopIndex(0,1);
+                Controller.ledStatus.setStopIndex(1,1);
+                Controller.ledStatus.setStopIndex(2,1);
+                stopCurrentText.textObject.setText(Controller.ledStatus.getOffString());
+                onCurrentText.textObject.setText(Controller.ledStatus.getOnString());
+            }
+        });
+
+        startAllBtn.buttonObject.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                Controller.ledStatus.setStopIndex(0,0);
+                Controller.ledStatus.setStopIndex(1,0);
+                Controller.ledStatus.setStopIndex(2,0);
+                stopCurrentText.textObject.setText(Controller.ledStatus.getOffString());
+                onCurrentText.textObject.setText(Controller.ledStatus.getOnString());
             }
         });
     }
@@ -188,5 +296,17 @@ public class UIHandler {
             return false;
         }
         return true;
+    }
+
+    private static void togglePowerBtn() {
+        
+    }
+
+    private static void toggleOnBtn() {
+
+    }
+
+    private static void toggleOffBtn() {
+
     }
 }

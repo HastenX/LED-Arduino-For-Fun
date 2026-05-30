@@ -1,5 +1,6 @@
 package ledarduino;
 
+import ledarduino.Constants.ControllerConstants;
 import ledarduino.Threads.Controller;
 import ledarduino.Threads.UI;
 
@@ -10,5 +11,7 @@ public class Main {
     public static void main(String[] args) {
         ui.start();
         controller.start();
+        
+        ControllerConstants.updateHashmaps();
     }
 }
