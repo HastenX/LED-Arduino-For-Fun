@@ -7,6 +7,7 @@ void updateSignalsIfModulo(int,int);
 
 bool isIndexBad(int);
 void setRGB(int, int, int, int);
+void updateSingleLEDs();
 
 void initLEDS(int,int,int);
 void selectProfile();
@@ -86,32 +87,45 @@ void updateSignalsIfModulo(int base, int mod) {
   if(base % mod == 0) {
     updateSignals();
   }
+  updateSingleLEDs();
 }
 
 bool isIndexBad(int index) {
-  switch(index) {
+  switch(signals[1]) {
     case 0:
       return false;
     case 1:
-      return !index==0;
+      return index==0;
     case 2:
-      return !index==1;
+      return index==1;
     case 3:
-      return !index==2;
+      return index==2;
     case 4:
-      return !index==0 || !index==1;
+      return index==0 || index==1;
     case 5:
-      return !index==0 || !index==2;
+      return index==0 || index==2;
     case 6:
-      return !index==1 || !index==2;
+      return index==1 || index==2;
     case 7:
       return true;
   }
+  initLEDS(255,0,0);
+  return false;
+}
+
+void updateSingleLEDs() {
+  if(!isIndexBad(2)) {
+    digitalWrite(7,HIGH);
+  } else {
+    digitalWrite(7,LOW);
+  }  
 }
 
 void setRGB(int index, int red, int green, int blue) {
   if(isIndexBad(index)) {
-    return;
+    red=0;
+    green=0;
+    blue=0;
   }
   analogWrite(redPins[index],red);
   analogWrite(greenPins[index],green);
@@ -141,6 +155,7 @@ int currentProfile=0;
 int currentStageOfProfile=1;
 
 void selectProfile() {
+  updateSingleLEDs();
   switch (signals[0]) {
     case 0:
       customProfile();
@@ -227,15 +242,15 @@ void alternateProfile() {
   }
 }
 
-int delayVal=5;
-int signalDelay=1;
+int delayVal=0;
+int signalDelay=10;
 int incrimentVal=1;
 void stageOneUni() {
   r=255;
   g=0;
   b=0;
   while(g<255) {
-    // updateSignalsIfModulo(g,signalDelay);
+    updateSignalsIfModulo(g,signalDelay);
 
     g+=incrimentVal;
     setAllRGB(r,g,b);
