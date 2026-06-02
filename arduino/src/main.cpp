@@ -32,8 +32,8 @@ void stageSixAlt();
 
 
 int redPins[2]={3,9};
-int greenPins[2]={5,10};
-int bluePins[2]={6,11};
+int greenPins[2]={6,10};
+int bluePins[2]={5,11};
 
 void setup() {
   Serial.begin(57600);
@@ -63,9 +63,6 @@ int signals[5]={0,0,0,0,0};
 // 7: 111
 
 void loop() {
-  // RED LED
-  // analogWrite(7,HIGH);
-  // Green LED
   updateSignals();
   selectProfile();
 }
@@ -127,9 +124,9 @@ void setRGB(int index, int red, int green, int blue) {
     green=0;
     blue=0;
   }
-  analogWrite(redPins[index],red);
-  analogWrite(greenPins[index],green);
-  analogWrite(bluePins[index],blue);
+  analogWrite(redPins[index],255-red);
+  analogWrite(greenPins[index],255-green);
+  analogWrite(bluePins[index],255-blue);
 }
 
 void setAllRGB(int red,int green, int blue) {

@@ -21,8 +21,8 @@ public class Constants {
     }
 
     public static final class ControllerConstants {
-        // public static final String kPortDescriptor = "/dev/ttyACM0";
-        public static final String kPortDescriptor = "COM6";
+        public static final String kPortDescriptor = "/dev/ttyACM0";
+        // public static final String kPortDescriptor = "COM6";
 
         public static final int kBaudRate = 57600;
         public static final int kNewDataBits = 8;
