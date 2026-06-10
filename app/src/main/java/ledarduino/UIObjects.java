@@ -11,11 +11,13 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+/**Handles UI Objects-- specifically using AWT and Swing */
 public interface UIObjects {
     public class TextObjects {
         private static ArrayList<JTextArea> texts = new ArrayList<JTextArea>();
         public final JTextArea textObject;
 
+        /**Constructs JTextArea using a constructor */
         public TextObjects(
             String text,
             Rectangle rectangle, 
@@ -46,6 +48,7 @@ public interface UIObjects {
         private static ArrayList<JTextField> inputs = new ArrayList<JTextField>();
         public final JTextField inputObject;
 
+        /**Constructs JTextField using a constructor */
         public InputObjects(
             String text,
             Rectangle rectangle, 
@@ -72,6 +75,7 @@ public interface UIObjects {
         }
     }
 
+    /**Constructs JButton using a constructor */
     public class ButtonObjects {
         private static ArrayList<JButton> buttons = new ArrayList<JButton>();
         public final JButton buttonObject;

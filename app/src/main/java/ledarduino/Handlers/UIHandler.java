@@ -15,8 +15,10 @@ import ledarduino.Threads.Controller;
 import ledarduino.UIObjects.*;
 
 public class UIHandler {
+    // Frame: What every UI object appends to
     private static JFrame frame = new JFrame("LED-UI");
 
+    // Constructs UI objects
     private static TextObjects header = new TextObjects(
         "LED-Selector!", 
         new Rectangle(250,40,230,60), 
@@ -179,6 +181,7 @@ public class UIHandler {
         UIConstants.kDefaultMargins
     );
 
+    /**Starts the UI for users to interact with*/
     public static void init() {
         frame= TextObjects.appendAllText(frame);
         frame= InputObjects.appendAllText(frame);
@@ -190,9 +193,12 @@ public class UIHandler {
     }
 
     private static void configureEvents() {
+        // Sets RGB LEDS to custom color
         setRGBBtn.buttonObject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                // Sets text of button and custom profile to color of UI RGB values
+                // And sets LED Status (inside Controller.java) to custom color
                 if(
                     isValidNum(rInput.inputObject.getText())
                         && isValidNum(bInput.inputObject.getText())
@@ -227,12 +233,16 @@ public class UIHandler {
         stopIndexBtn.buttonObject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                // If the index of the chosen index exists, then set the chosen
+                // index off and update the text of the stop and on indexes text 
+                // boxes.
                 String currentIndex=indexInput.inputObject.getText();
                 if(isValidNum(currentIndex) 
                     && Integer.valueOf(currentIndex)<=2
                     && Integer.valueOf(currentIndex)>=0
                 ) {
                     Controller.ledStatus.setStopIndex(Integer.valueOf(currentIndex),1);
+
                     stopCurrentText.textObject.setText(Controller.ledStatus.getOffString());
                     onCurrentText.textObject.setText(Controller.ledStatus.getOnString());
                 }
@@ -242,6 +252,9 @@ public class UIHandler {
         startIndexBtn.buttonObject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                // If the index of the chosen index exists, then set the chosen
+                // index on and update the text of the stop and on indexes text 
+                // boxes.
                String currentIndex=indexInput.inputObject.getText();
                 if(isValidNum(currentIndex)
                     && Integer.valueOf(currentIndex)<=2
@@ -257,6 +270,7 @@ public class UIHandler {
         stopAllBtn.buttonObject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                // Turns off all indexes and updates the stop and on indexes text boxes.
                 Controller.ledStatus.setStopIndex(0,1);
                 Controller.ledStatus.setStopIndex(1,1);
                 Controller.ledStatus.setStopIndex(2,1);
@@ -268,6 +282,7 @@ public class UIHandler {
         startAllBtn.buttonObject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                // Turns on all indexes and updates the stop and on indexes text boxes.
                 Controller.ledStatus.setStopIndex(0,0);
                 Controller.ledStatus.setStopIndex(1,0);
                 Controller.ledStatus.setStopIndex(2,0);
@@ -278,6 +293,7 @@ public class UIHandler {
     }
 
     private static void configureFrame() {
+        // Configures frame to work with code
         frame.setLayout(UIConstants.kFrameLayout);
 
         frame.setSize(UIConstants.kFrameDimension);
@@ -288,25 +304,15 @@ public class UIHandler {
     }
 
     private static boolean isValidNum(String str) {
+        // Uses casting error/ intentional throwing of an exception for determining if
+        // string is a valid number. the maximum value of RGB is 255, the minimum is 0
         try {
-            if(Integer.valueOf(str) > 255 || str.contains(",") || str.contains(".")) {
+            if(Integer.valueOf(str) > 255 || Integer.valueOf(str) < 0 || str.contains(",") || str.contains(".")) {
                 throw new Exception();
             }
         } catch (Exception e) {
             return false;
         }
         return true;
-    }
-
-    private static void togglePowerBtn() {
-        
-    }
-
-    private static void toggleOnBtn() {
-
-    }
-
-    private static void toggleOffBtn() {
-
     }
 }

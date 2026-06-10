@@ -10,6 +10,7 @@ import ledarduino.Constants.ControllerConstants;
 public class ControllerHandler {
     private static SerialPort serialPort = SerialPort.getCommPort(ControllerConstants.kPortDescriptor);
 
+    // Configures the port for Arduino Communciation
     static {
         serialPort.setComPortParameters(ControllerConstants.kBaudRate,ControllerConstants.kNewDataBits,ControllerConstants.kNewStopBits,0);
         serialPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
@@ -18,6 +19,15 @@ public class ControllerHandler {
     private static ArrayList<Integer> signals;
     private static byte[] readBuffer = new byte[1024];
 
+    /**This is the communication code between the arduino and the computer.
+     * The arduino sends a 'dump signal'. When this occurs, when reading the 
+     * incomming bytes, its value will equal 1. This code then writes values
+     * to the Arduino, which determine:
+     * 1. Which profile are the LEDs under
+     * 2. What LEDs are off
+     * 3. What color should be on the LEDs
+     * @param ledStatus current statusof the LED
+     */
     public static void run(LEDStatus ledStatus) {
         if(!serialPort.isOpen()) {
             serialPort.openPort();
@@ -57,6 +67,9 @@ public class ControllerHandler {
 
 
 
+    /**Stores (1) the color, (2) the stop indexes and (3) the color of each profile.
+     * indexes are used so that the arduino code can recognize profiles.
+     */
     public enum LEDStatus {
         none(0, ControllerConstants.kColorFiller),
         custom(0,ControllerConstants.kColorFiller),
@@ -80,6 +93,8 @@ public class ControllerHandler {
             return this.color;
         }
 
+        // 1=off
+        // 0=on
         public void setStopIndex(int position, int val) {
             stopIndexes[position] = val;
         }
@@ -128,6 +143,8 @@ public class ControllerHandler {
             return -1;
         }
 
+
+        /**Returns a string to be appended to the off indexes textbox*/
         public String getOffString() {
             String returnVal = "Off: ";
             int stopIndexeKeys = generateStopIndexes();
@@ -141,6 +158,7 @@ public class ControllerHandler {
             return returnVal;
         }
 
+        /**Returns a string to be appended to the on indexes textbox*/
         public String getOnString() {
             String returnVal = "On: ";
             int stopIndexKeys = generateStopIndexes();

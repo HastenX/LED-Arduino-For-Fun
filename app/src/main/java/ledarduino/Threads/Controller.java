@@ -4,8 +4,11 @@ import ledarduino.Handlers.ControllerHandler;
 import ledarduino.Handlers.ControllerHandler.LEDStatus;
 
 public class Controller extends Thread {
+    // Used to determine the current profile to be sent to Arduino
     public static LEDStatus ledStatus = LEDStatus.none;
 
+    // Code thread will continously execute. Has a try-catch because of 
+    // intended sleep delay
     @Override
     public void run() {
         while(true) {
@@ -14,14 +17,6 @@ public class Controller extends Thread {
             } catch (Exception e) {}
             ControllerHandler.run(ledStatus);
         }
-    }
-
-    public boolean shouldStop() {
-        return ledStatus == LEDStatus.none;
-    }
-
-    public boolean shouldSwap(LEDStatus status) {
-        return ledStatus != status;
     }
 
 }
