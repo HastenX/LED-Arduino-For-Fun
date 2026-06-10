@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-// put function declarations here:
 
+// Function declarations
 void updateSignals();
 void updateSignalsIfModulo(int,int);
 
@@ -36,12 +36,14 @@ int greenPins[2]={6,10};
 int bluePins[2]={5,11};
 
 void setup() {
+  // Sets baud rate
   Serial.begin(57600);
   for(int i=0; i<2; i++) {
     pinMode(redPins[i],OUTPUT);
     pinMode(greenPins[i],OUTPUT);
     pinMode(bluePins[i],OUTPUT);
   }
+  // Gives yellow initalization blinking
   initLEDS(255,81,0);
 }
 
@@ -62,15 +64,20 @@ int signals[5]={0,0,0,0,0};
 // 6: 011
 // 7: 111
 
+// This avoids passing each index status individually
+
 void loop() {
   updateSignals();
   selectProfile();
 }
 
 void updateSignals() {
+  // Sends 'dump signal' and then waits for it to be recieved
   Serial.println(1);
   Serial.flush();
   int signalNum=0;
+
+  // gathers signals and appends to array
   while(signalNum<5) {
     if(Serial.available()>0) {
       signals[signalNum]=Serial.read();
